@@ -459,6 +459,12 @@ impl<R: Runtime> AppHandle<R> {
       .map_err(Into::into)
   }
 
+  /// Runs the given closure on the android context.
+  #[cfg(target_os = "android")]
+  pub fn run_on_android_context<F: FnOnce(&mut jni::JNIEnv, &jni::objects::JObject, &jni::objects::JObject) + Send + 'static>(&self, f: F) {
+    self.runtime_handle.run_on_android_context(f)
+  }
+
   /// Adds a Tauri application plugin.
   /// This function can be used to register a plugin that is loaded dynamically e.g. after login.
   /// For plugins that are created when the app is started, prefer [`Builder::plugin`].
